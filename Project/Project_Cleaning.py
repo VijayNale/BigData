@@ -17,7 +17,7 @@ card_tran = spark.read.format("csv")\
 #card_tran.show()
 
 columns = ["card_id","member_id","amount","postcode","pos_id","transaction_dt","Status"]
-card_trans = spark.createDataFrame(card_tran.rdd,schema=columns).repartition(1)
+card_trans = spark.createDataFrame(card_tran.rdd,schema=columns).repartition(4)
 
 card_trans.printSchema()
 card_trans.show()
