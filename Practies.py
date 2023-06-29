@@ -29,9 +29,19 @@ df.groupby("gender").sum("salary").show(truncate=False)
 
 df.filter(col("gender") == "M").show()
 df.where(col("gender") == "F").show()
+
+############################################################################################
+"""dens_rank"""
+from pyspark.sql.window import Window
+partition=Window.partitionBy("gender").orderBy("salary")
+df.withColumn("Rank",dense_rank().over(partition)).show()
 ############################################################################################
 #UDF
 from pyspark.sql.types import StringType
-uppdercase = udf(lambda z: uppdercase(z))
-df.withColumn("Upper Case", uppdercase(col("firstname"))).show()
 
+def upperCase(str):
+    return str.upper()
+
+spark.udf.register("parseAgeFunction",upperCase,StringType())
+# SQL expression : function that which register in catelog
+df.withColumn("Upper Case",expr("parseAgeFunction(firstname)")).show()
